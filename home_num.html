@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>输入房间号</title>
+	<style type="text/css">
+	/*reset*/
+	*:before, *:after {
+	    -webkit-box-sizing: border-box;
+	    -moz-box-sizing: border-box;
+	    box-sizing: border-box;
+	}
+
+	html,body,h1,h2,h3,h4,h5,h6,p,ul,ol,form { margin: 0; }
+
+	ul,ol {
+	    padding-left:0;
+	    list-style-type:none;
+	}
+
+	a {
+	    text-decoration: none;
+	    color: #fff;
+	}
+
+	.btn {
+		outline: none;
+		border: none;
+	}
+
+	.fl {
+		float: left;
+	}
+
+	.fr {
+		float: right;
+	}
+
+	/*清楚浮动*/
+	.fix {
+	    *zoom: 1;
+	}
+
+	.fix:after {
+	    display: block;
+	    content: "clear";
+	    height: 0;
+	    clear: both;
+	    overflow: hidden;
+	    visibility: hidden;
+	}
+
+	/*修改默认placeholder颜色*/
+	input::-webkit-input-placeholder { /* WebKit browsers*/ 
+　　	color: #999; font-size:14px;
+　　}
+	input:-moz-placeholder {  /* Mozilla Firefox 4 to 18*/ 
+　　	color: #999; font-size:14px;
+　　}
+	input::-moz-placeholder {  /* Mozilla Firefox 19+*/ 
+　　	color: #999; font-size:14px;
+　　}
+	input:-ms-input-placeholder { /* Internet Explorer 10+*/ 
+　　	color: #999; font-size:14px;
+	}
+
+	/*内容样式*/
+	html, body {
+		height: 100%;
+	}
+
+	.contanier {
+		height: 100%;
+	}
+
+	.contanier .hp-container {
+		position: relative;
+		min-width: 1185px;
+		width: 100%;
+		height: 100%;
+	}
+
+	.hp-container .bg-box,
+	.hp-container .focus-mask {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+	}
+
+	.hp-container .bg-box {
+		background: url("images/bg.jpg") no-repeat;
+		background-size: cover;
+		z-index: -1;
+	}
+
+	.hp-container .s-box {
+		position: absolute;
+	    top: 200px;
+	    left: 0;
+	    right: 0;
+	    margin: 0 auto;
+	    width: 1185px;
+	    height: 100px;
+	    z-index: 12;
+	}
+
+	.s-box .tsf-p {
+		padding-right: 290px;
+		padding-left: 290px;
+		height: 44px;
+	}
+
+	.tsf-p input {
+		padding: 10px 5px;
+		width: 480px;
+		height: 24px;
+		font-size: 16px;
+		letter-spacing: .8px;
+		border: 0;
+		border-radius: 3px 0 0 3px;
+		outline: none;
+	}
+
+	.tsf-p .btn-inroom {
+		width: 115px;
+		height: 100%;
+		font-size: 16px;
+		line-height: 44px;
+		color: #fff;
+		border-radius: 0 3px 3px 0;
+	    background: #4285f4;
+	    background: -webkit-linear-gradient(top,#4387fd,#4683ea);
+	    background: linear-gradient(top,#4387fd,#4683ea);
+	    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#4387fd,endColorstr=#4683ea,GradientType=0);
+		cursor: pointer;
+	}
+
+	.hp-container .focus-mask {
+		display: none;
+		background: #000;
+		opacity: 0.35;
+		z-index: 10;
+	}
+
+	.err-msg {
+	    position: absolute;
+	    top: 170px;
+	    right: 0;
+	    left: 0;    
+    	margin: 0 auto;
+	    width: 1185px;
+    	color: #fff;
+    	z-index: 12;
+	}
+
+	.err-msg p {
+		position: relative;
+		width: 605px;
+		margin: 0 auto;
+	}
+
+	.err-msg span {
+		display: none;
+		position: absolute;
+		padding: 5px;
+		border-radius: 3px;
+		font-size: 12px;
+	    font-weight: 700;
+	    letter-spacing: 2px;
+		background: rgba(206, 86, 86, 0.86);
+		transition: all 1s;
+	}
+	</style>
+</head>
+<body>
+	<div class="contanier">
+		<div class="hp-container">
+			<div class="bg-box"></div>
+			<div class="s-box">
+				<div class="tsf-p">
+					<input id="numInput" type="text" class="fl" placeholder="请输入房间号...">
+					<button id="goRoom" class="btn btn-inroom fr">进入房间</button>
+				</div>
+			</div>
+			<div class="focus-mask"></div>
+			<div class="err-msg">
+				<p>
+					<span></span>
+				</p>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+
+			$("#numInput").focus(function() {	//聚焦
+				$(".focus-mask").show();
+				$(".err-msg span").hide();
+			}).blur(function() {	//失焦
+				$(".focus-mask").hide();
+			});
+
+			$("#goRoom").click(function() {
+				var num = $("#numInput");
+				var reg = /^[0-9]*[1-9][0-9]*$/;
+				if(num.val()) {
+					if(!reg.test(num.val())) {
+						num.val("");
+						erroMsg("对不起，房间号只能是数字！");
+					}else {
+						alert("欢迎进入房间！");
+					}
+				}else {
+					erroMsg("请输入房间号！");
+				}
+			});
+
+			function erroMsg(msg) {
+				var _box = $(".err-msg span");
+				_box.text(msg);
+				_box.show();
+			}
+		});
+	</script>
+</body>
+</html>
